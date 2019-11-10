@@ -8,7 +8,15 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/**
+ * @author Taylor Fukumoto
+ * @date 7 November 2019
+ *
+ * PuzzleController is the controller class
+ * It initializes the puzzle board, listens for user clicks,
+ * and checks move validity
+ *
+ */
 public class PuzzleController implements View.OnClickListener {
     protected int blankSquareIndex; //index of blank square
     protected ArrayList<Button> squareArray = new ArrayList<>();
@@ -19,13 +27,22 @@ public class PuzzleController implements View.OnClickListener {
 
     private static final String TAG = "onClick";
 
-
+    //empty constructor
     public PuzzleController(){ }
 
-
+    /**
+     * setSquareArray method initializes the puzzle board
+     *
+     * @param mySquareArray: array of the 16 buttons passed in from MainActivity class
+     * adds numbers 1-15 and one blank to puzzleLayout, an ArrayList of strings that contain
+     *                     the values displayed on each square in puzzle
+     *
+     * calls shuffle puzzle to shuffle puzzleLayout array to then assign to buttons in
+     *                     squareArray
+     *
+     */
     public void setSquareArray(ArrayList<Button> mySquareArray){
         this.squareArray = mySquareArray;
-
         puzzleLayout.add("1");
         puzzleLayout.add("2");
         puzzleLayout.add("3");
@@ -47,6 +64,14 @@ public class PuzzleController implements View.OnClickListener {
 
     }
 
+    /**
+     * shufflePuzzle method shuffles the puzzleLayout array randomly, and then checks that the shuffled
+     *      array is winnable
+     *      If it's not winnable, reshuffles. If it is winnable, assigns the puzzleLayout values to
+     *          the button texts
+     *
+     *
+     */
     public void shufflePuzzle(){
         //randomizes array order to randomize puzzle
         Collections.shuffle(puzzleLayout);
@@ -83,6 +108,17 @@ public class PuzzleController implements View.OnClickListener {
     }
 
 
+    /**
+     * onClick method is the listener for user tapping a square to move in puzzle
+     *
+     * onClick is also used to listen for reset button clicks- if reset button is clicked,
+     *      calls the shuffle array
+     *
+     * checks that the square user selected is a valid square to move, and if it is,
+     *      assigns the blank square's text to the selected square and clears selected
+     *      square's text
+     *
+     */
     public void onClick(View v) {
         if(v.getId() == R.id.resetButton){
             Log.i(TAG, "reset pressed");
@@ -96,6 +132,7 @@ public class PuzzleController implements View.OnClickListener {
                     if (this.isValid(i)) {
                         this.squareArray.get(this.blankSquareIndex).setText(this.squareArray.get(i).getText());
                         this.squareArray.get(i).setText(" ");
+                        //checks if square is in correct position, if it is, changes text color
                         if (this.isCorrect(this.blankSquareIndex)) {
                             this.squareArray.get(this.blankSquareIndex).setTextColor(Color.BLUE);
                         } else {
@@ -105,31 +142,43 @@ public class PuzzleController implements View.OnClickListener {
                 }
             }
 
+            //checks if game is won, if so, changes every square's background color to green
             if (this.isWin()) {
                 for (int i = 0; i < this.squareArray.size(); i++) {
                     this.squareArray.get(i).setBackgroundColor(Color.GREEN);
                 }
             }
         }
-
     }
 
+    /**
+     * isValid method checks if selected square is valid to move
+     *
+     * @param selectedIndex: selected square's index
+     *
+     * @return true if is valid, false if not valid
+     *
+     */
     public boolean isValid(int selectedIndex){
+        //checks if blank square is to the left of square
         if(selectedIndex != 0 && selectedIndex !=4 && selectedIndex !=8 && selectedIndex!=12
                 && this.squareArray.get(selectedIndex - 1).getText().equals(" ")){
             this.blankSquareIndex = selectedIndex - 1;
             return true;
         }
+        //checks if blank square is to the right of square
         else if(selectedIndex !=3 && selectedIndex !=7 && selectedIndex !=11 && selectedIndex!=15 &&
                 this.squareArray.get(selectedIndex +1).getText().equals(" ")){
             this.blankSquareIndex = selectedIndex + 1;
             return true;
         }
+        //checks if blank square is above square
         else if(selectedIndex !=0 && selectedIndex !=1 && selectedIndex !=2 && selectedIndex !=3
                 && this.squareArray.get(selectedIndex - 4).getText().equals(" ")){
             this.blankSquareIndex = selectedIndex - 4;
             return true;
         }
+        //checks if blank square is below square
         else if(selectedIndex !=12 && selectedIndex !=13 && selectedIndex !=14 && selectedIndex !=15
                 && this.squareArray.get(selectedIndex + 4).getText().equals(" ")){
             this.blankSquareIndex = selectedIndex + 4;
@@ -140,7 +189,15 @@ public class PuzzleController implements View.OnClickListener {
         }
     }
 
+    /**
+     * isCorrect method checks if square is in correct spot on the board
+     *      if it is, returns true
+     *
+     * @param index: index of square to be checked if position is correct
+     *
+     */
     public boolean isCorrect(int index){
+        //checks if square's text at "index" is equal to what number it should be
         if(this.squareArray.get(index).getText().equals(String.valueOf(index+1))){
             return true;
         }
@@ -149,12 +206,21 @@ public class PuzzleController implements View.OnClickListener {
         }
     }
 
+    /**
+     * isWin method checks if all squares are in the right spot
+     *
+     * iterates through all squares in square array and if it goes through the whole array
+     *      without finding an incorrect square, returns true
+     *
+     */
     public boolean isWin(){
+        //checks every square in the squareArray for a square that is not correct
         for(int i = 0; i<this.squareArray.size(); i++){
-            if(!this.squareArray.get(i).getText().equals(String.valueOf(i+1))){
+            if(!isCorrect(i)){
                 return false;
             }
         }
         return true;
     }
+
 }

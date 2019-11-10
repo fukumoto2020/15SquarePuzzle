@@ -39,6 +39,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:text="Reset"
                 android:textSize="24sp" />
+
         </LinearLayout>
 
         <LinearLayout

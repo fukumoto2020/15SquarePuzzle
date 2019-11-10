@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RadioButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * @author Taylor Fukumoto
+ * @date 7 November 2019
+ *
+ */
 public class MainActivity extends AppCompatActivity {
     protected ArrayList<Button> squareArray = new ArrayList<>(); //array of all 16 buttons
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button reset = (Button)findViewById(R.id.resetButton);
         reset.setOnClickListener(myListener);
-
         Button square1 = (Button)findViewById(R.id.button);
         square1.setOnClickListener(myListener);
         Button square2 = (Button)findViewById(R.id.button2);
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         Button square16 = (Button)findViewById(R.id.button16);
         square16.setOnClickListener(myListener);
 
+
         //adds each button to squareArray
         this.squareArray.add(square1);
         this.squareArray.add(square2);
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         this.squareArray.add(square15);
         this.squareArray.add(square16);
 
+        //passes squareArray to listener class through setSquareArray method
         myListener.setSquareArray(this.squareArray);
 
     }
